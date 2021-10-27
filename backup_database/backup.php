@@ -1,7 +1,10 @@
 <?php
+if (session_status()==PHP_SESSION_NONE){
+    session_start();
+}
 $dbhost = 'localhost';
-$dbuser = 'root';
-$dbpass = '';
+$dbuser = $_SESSION['username'];
+$dbpass = $_SESSION['username'];
 //$dbname = 'gdi';
 //$tables = '*';
 

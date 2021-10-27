@@ -1,4 +1,7 @@
 <?php
+if (session_status()==PHP_SESSION_NONE){
+    session_start();
+}
 require_once 'fonctions.php';
 if (!empty($_GET['table']) && !empty($_GET['db'])){
     echo "<h6>Liste des sauvegarges de la table <strong>".$_GET['table']." </strong></h6>";
@@ -54,8 +57,8 @@ if (!empty($_GET['action'])){
     }
     if ($_GET['action'] =='restore') {
         $dbHost     = 'localhost';
-        $dbUsername = 'root';
-        $dbPassword = '';
+        $dbUsername = $_SESSION['username'];
+        $dbPassword = $_SESSION['password'];
         $dbName     = $_GET['db'];
         $filePath   = "sauvegarde/bases/".$_GET['link']."/".$_GET['file'];
         $success=restoreDatabaseTables($dbHost, $dbUsername, $dbPassword, $dbName, $filePath);

@@ -1,3 +1,7 @@
+<?php
+if (session_status()==PHP_SESSION_NONE){
+    session_start();
+}?>
 <html>
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
@@ -6,23 +10,49 @@
 <?php
 if (!empty($_GET)){
     $servername = "localhost";
-    $username = "root";
-    $password = "";
+    $username = $_SESSION['username'];
+    $password = $_SESSION['password'];
     $conn = new PDO("mysql:host=$servername;dbname=".$_GET['dbname'], $username, $password);
 
     $query = $conn->prepare('show tables');
     $query->execute();
-    echo "<h3 class='text-center'>Basee de donnée: ".$_GET['dbname']."<a href='list_backup.php?db=".$_GET['dbname']."'>Voir les backup</a><a href='backup.php?db=".$_GET['dbname']."'>Faire un backup</a></h3>";
-    echo "<table class='table table-striped'><thead> <td>Nom table</td><td>Actions</td> </thead><tbody>";
+    $result=$query->fetchAll() ;
 
-    while($rows = $query->fetch(PDO::FETCH_ASSOC)){
+    echo "<h3 class='text-center'>Base de donnée: ".$_GET['dbname']."<br><div><a class='btn btn-outline-warning' href='backup.php?db=".$_GET['dbname']."'>Faire un backup</a><a class='btn btn-outline-danger' style='margin-left: 5px !important;' href='list_backup.php?db=".$_GET['dbname']."'>Voir les backup</a></div></h3>";
+  echo "<form method='get' action='tb_diff.php'>
+<input type='hidden' name='db' value='".$_GET['dbname']."'><div class=' col-8 mx-auto '>
+Choisir une table
+<select  class='form-control' name='tb1'>";
+
+    foreach($result as $rows ){
         $rows=array_values($rows);
         if( isset($rows[0])){
-            echo "<tr><td>". $rows[0]."</td><td><a href='backup.php?table=$rows[0]&db=".$_GET['dbname']."'>Faire un backup</a><a href='list_backup.php?table=$rows[0]&db=".$_GET['dbname']."'>Voir les backup</a><button>Supprimer</button></td></tr>";
+            echo "<option value='".$rows[0]."'>". $rows[0]."</option>";
         }
 
     }
-    echo "</tbody></table>";
+    echo "</select>";
+  echo "Choisir une table
+<select  class='form-control' name='tb2'>";
+    foreach($result as $rows ){
+        $rows=array_values($rows);
+        if( isset($rows[0])){
+            echo "<option value='".$rows[0]."'>". $rows[0]."</option>";
+        }
+
+    }
+    echo "</select>";
+    echo "<input class='btn btn-outline-danger mt-3' type='submit' name='compare' value='Comparer'></div></form>";
+    echo "<div class=' col-8 mx-auto'><h3 class='mb-2 mt-2 text-center'>Tables</h3> <table class='table table-striped'><thead> <th>Nom table</th><th>Actions</th> </thead><tbody>";
+
+    foreach($result as $rows ){
+        $rows=array_values($rows);
+        if( isset($rows[0])){
+            echo "<tr><td>". $rows[0]."</td><td><a class='btn btn-outline-warning mr-1' style='margin-right: 5px !important;' href='backup.php?table=$rows[0]&db=".$_GET['dbname']."'>Faire un backup</a><a class='btn btn-outline-danger ml-1' href='list_backup.php?table=$rows[0]&db=".$_GET['dbname']."'>Voir les backup</a></td></tr>";
+        }
+
+    }
+    echo "</tbody></table> </div>";
 
 
 //MySQL server and database

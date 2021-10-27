@@ -36,7 +36,7 @@ function backup_tables($host, $user, $pass, $dbname, $tables = '*') {
         if (!file_exists("sauvegarde/bases/".$dbname."/tables/".$table) && $isAll !="*") {
             mkdir("sauvegarde/bases/".$dbname."/tables/".$table, 0777, true);
         }
-        $result = mysqli_query($link, 'SELECT * FROM '.$table);
+         $result = mysqli_query($link, 'SELECT * FROM '.$table);
         $num_fields = mysqli_num_fields($result);
         $num_rows = mysqli_num_rows($result);
 
@@ -86,9 +86,9 @@ function backup_tables($host, $user, $pass, $dbname, $tables = '*') {
     }
     fwrite($handle,$return);
     if(fclose($handle)){
-        $msg=$tables=='*'?"La base de donnée <strong>".$dbname."<strong> a été sauvegardée avec succes":"La table <strong> $table </strong>de la base de donnée<strong> $dbname</strong> a été sauvegardée avec succés";
+        $msg=$isAll=='*'?"La base de donnée <strong>".$dbname."<strong> a été sauvegardée avec succes":"La table <strong> $table </strong>de la base de donnée<strong> $dbname</strong> a été sauvegardée avec succés";
         $msg.="<br> <a href='index.php'> Retour a l'accueil</a>";
-        echo $msg;
+        echo  $msg;
         exit;
     }
 }
