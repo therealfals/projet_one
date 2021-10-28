@@ -49,7 +49,8 @@ try {
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
    // echo "Connected successfully";
 } catch(PDOException $e) {
-  //  echo "Connection failed: " . $e->getMessage();
+    echo "<div class='col-6 mx-auto alert alert-danger'><h3 class='text-center'>Erreur lors de la connexion!<br> Veuillez vérifier vos identifiants!</h3> </div>";// . $e->getMessage();
+exit();
 }
 //$dbh = new PDO('mysql:host=localhost;user=root;password=;dbname=baz');
 $statement = $conn->query('SHOW DATABASES');
