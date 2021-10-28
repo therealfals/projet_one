@@ -4,7 +4,7 @@ if (session_status()==PHP_SESSION_NONE){
 }
 $dbhost = 'localhost';
 $dbuser = $_SESSION['username'];
-$dbpass = $_SESSION['username'];
+$dbpass = $_SESSION['password'];
 //$dbname = 'gdi';
 //$tables = '*';
 
