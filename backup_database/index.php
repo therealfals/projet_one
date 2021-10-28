@@ -12,12 +12,20 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 </head>
 <body>
+ <a href="logout.php" class="m-2 mt-2 btn btn-danger rounded rounded-pill float-right" >Se deconnecter</a>
 
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 </body>
 </html>
 <script>
     function connectDatabase(db) {
         const y=document.getElementById("dbname")
+        const btn=document.getElementById("btn-connect")
+        btn.style.display="block";
         y.value=db
         const dbTxt=document.getElementById("dbTxt")
         dbTxt.innerText=db
@@ -81,20 +89,20 @@ echo "<h2 class='text-center mt-5 mb-4'>Liste des bases de données</h2><div cla
 <h2 id='dbTxt' class='text-center text-danger '></h2>
 <form method=\"get\" action=\"traitement_db.php\">
     <input class=\"form-control col-6\" type=\"hidden\" name=\"dbname\" id=\"dbname\">
-    <div  class=\"text-center mb-5 col-12\">
-        <input class=\"btn btn-outline-danger\" type='submit'name=\"submit\" value=\"Se connecter\">
+    <div style='display:none' id='btn-connect' class=\"text-center mb-5 col-12\">
+        <input   class=\"btn btn-outline-danger\" type='submit'name=\"submit\" value=\"Se connecter\">
 
     </div>
 
 </form>
 ";
+echo"<table class='table table-striped'><thead><th>Base de donnée</th><th>Actions</th></thead><tbody>";
 foreach( $result as $p){
 
-    echo("<div class='col-4 mt-1 text-left'>".$p ["schema_name"]);
-    echo "<button style='margin-left:5px !important' type='button' class='btn btn-sm btn-outline-danger rounded rounded-pill' onclick='connectDatabase(\"".$p ["schema_name"]."\")'>Choisir</button>";
-    echo "</div>";
+    echo("<tr><td>".$p ["schema_name"])."</td><td><button style='margin-left:5px !important' type='button' class='btn btn-sm btn-outline-danger rounded rounded-pill' onclick='connectDatabase(\"".$p ["schema_name"]."\")'>Choisir</button></td></tr>";
 }
-echo '</div>';
+
+echo '</tbody></table></div>';
 ?>
 
 <?php

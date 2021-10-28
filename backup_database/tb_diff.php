@@ -1,13 +1,25 @@
 <?php
 if (session_status()==PHP_SESSION_NONE){
     session_start();
-}?>
+}
+if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
+    header('Location:home.php');
+
+}
+?>
 <html>
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 </head>
 <body>
+<button class="m-2 mt-2 btn btn-danger rounded rounded-pill" onclick="goBack()">Précédent</button>
+<a href="logout.php" class="m-2 mt-2 btn btn-danger rounded rounded-pill float-right" >Se deconnecter</a>
 
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 <?php
 echo "<h3  class='text-center mb-5 mt-5'>Comparaison entre les tables <strong>".$_GET['tb1']." et ".$_GET['tb2']." </strong> </h3>";
 

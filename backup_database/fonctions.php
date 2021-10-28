@@ -1,4 +1,11 @@
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 <?php
+
 function backup_tables($host, $user, $pass, $dbname, $tables = '*') {
     $isAll=$tables=="*"?"*":[];
     $link = mysqli_connect($host,$user,$pass, $dbname);
@@ -87,8 +94,8 @@ function backup_tables($host, $user, $pass, $dbname, $tables = '*') {
     fwrite($handle,$return);
     if(fclose($handle)){
         $msg=$isAll=='*'?"La base de donnée <strong>".$dbname."<strong> a été sauvegardée avec succes":"La table <strong> $table </strong>de la base de donnée<strong> $dbname</strong> a été sauvegardée avec succés";
-        $msg.="<br> <a href='index.php'> Retour a l'accueil</a>";
-        echo  $msg;
+        $msg.="<br> <span onclick=\"goBack()\" style='cursor: pointer' >Précédent</span>";
+        echo  "<h3 style='text-align:center;color:green'>$msg</h3>";
         exit;
     }
 }
@@ -104,30 +111,33 @@ function restoreDatabaseTables($dbHost, $dbUsername, $dbPassword, $dbName, $file
     $templine = '';
 
     // Read in entire file
-    $lines = file($filePath);
+    if (file_exists($filePath)){
+        $lines = file($filePath);
+        $error = '';
 
-    $error = '';
-
-    // Loop through each line
-    foreach ($lines as $line){
-        // Skip it if it's a comment
-        if(substr($line, 0, 2) == '--' || $line == ''){
-            continue;
-        }
-
-        // Add this line to the current segment
-        $templine .= $line;
-
-        // If it has a semicolon at the end, it's the end of the query
-        if (substr(trim($line), -1, 1) == ';'){
-            // Perform the query
-            if(!$db->query($templine)){
-                $error .= 'Error performing query "<b>' . $templine . '</b>": ' . $db->error . '<br /><br />';
+        // Loop through each line
+        foreach ($lines as $line){
+            // Skip it if it's a comment
+            if(substr($line, 0, 2) == '--' || $line == ''){
+                continue;
             }
 
-            // Reset temp variable to empty
-            $templine = '';
+            // Add this line to the current segment
+            $templine .= $line;
+
+            // If it has a semicolon at the end, it's the end of the query
+            if (substr(trim($line), -1, 1) == ';'){
+                // Perform the query
+                if(!$db->query($templine)){
+                    $error .= 'Error performing query "<b>' . $templine . '</b>": ' . $db->error . '<br /><br />';
+                }
+
+                // Reset temp variable to empty
+                $templine = '';
+            }
         }
+        return !empty($error)?$error:true;
+
     }
-    return !empty($error)?$error:true;
-}
+    return false;
+    }

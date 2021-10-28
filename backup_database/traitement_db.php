@@ -1,12 +1,24 @@
 <?php
 if (session_status()==PHP_SESSION_NONE){
     session_start();
+}
+if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
+    header('Location:home.php');
+
 }?>
 <html>
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 </head>
 <body>
+<button class="m-2 mt-2 btn btn-danger rounded rounded-pill" onclick="goBack()">Précédent</button>
+<a href="logout.php" class="m-2 mt-2 btn btn-danger rounded rounded-pill float-right" >Se deconnecter</a>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 <?php
 if (!empty($_GET)){
     $servername = "localhost";
@@ -18,7 +30,7 @@ if (!empty($_GET)){
     $query->execute();
     $result=$query->fetchAll() ;
 
-    echo "<h3 class='text-center'>Base de donnée: ".$_GET['dbname']."<br><div><a class='btn btn-outline-warning' href='backup.php?db=".$_GET['dbname']."'>Faire un backup</a><a class='btn btn-outline-danger' style='margin-left: 5px !important;' href='list_backup.php?db=".$_GET['dbname']."'>Voir les backup</a></div></h3>";
+    echo "<h3 class='text-center'>Base de donnée: ".$_GET['dbname']."<br><div><a class='btn btn-outline-warning' href='backup.php?db=".$_GET['dbname']."&type=db'>Faire un backup</a><a class='btn btn-outline-danger' style='margin-left: 5px !important;' href='list_backup.php?db=".$_GET['dbname']."'>Voir les backup</a></div></h3>";
   echo "<form method='get' action='tb_diff.php'>
 <input type='hidden' name='db' value='".$_GET['dbname']."'><div class=' col-8 mx-auto '>
 Choisir une table
@@ -48,7 +60,7 @@ Choisir une table
     foreach($result as $rows ){
         $rows=array_values($rows);
         if( isset($rows[0])){
-            echo "<tr><td>". $rows[0]."</td><td><a class='btn btn-outline-warning mr-1' style='margin-right: 5px !important;' href='backup.php?table=$rows[0]&db=".$_GET['dbname']."'>Faire un backup</a><a class='btn btn-outline-danger ml-1' href='list_backup.php?table=$rows[0]&db=".$_GET['dbname']."'>Voir les backup</a></td></tr>";
+            echo "<tr><td>". $rows[0]."</td><td><a class='btn btn-outline-warning mr-1' style='margin-right: 5px !important;' href='backup.php?table=$rows[0]&db=".$_GET['dbname']."&type=table'>Faire un backup</a><a class='btn btn-outline-danger ml-1' href='list_backup.php?table=$rows[0]&db=".$_GET['dbname']."&type=table'>Voir les backup</a></td></tr>";
         }
 
     }
