@@ -21,6 +21,10 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
 </script>
 <?php
 require_once 'fonctions.php';
+$dbHost     =  $_SESSION['server'];
+$dbUsername = $_SESSION['username'];
+$dbPassword = $_SESSION['password'];
+$dbName     = $_GET['db'];
 if (!empty($_GET['action'])){
     if ($_GET['action'] == 'delete'){
         if (file_exists("sauvegarde/bases/".$_GET['link']."/".$_GET['file'])){
@@ -35,10 +39,7 @@ if (!empty($_GET['action'])){
 
     }
     if ($_GET['action'] =='restore') {
-        $dbHost     =  $_SESSION['server'];
-        $dbUsername = $_SESSION['username'];
-        $dbPassword = $_SESSION['password'];
-        $dbName     = $_GET['db'];
+
         $filePath   = "sauvegarde/bases/".$_GET['link']."/".$_GET['file'];
         $success=restoreDatabaseTables($dbHost, $dbUsername, $dbPassword, $dbName, $filePath);
         if ($success===true){

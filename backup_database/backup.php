@@ -6,7 +6,7 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
     header('Location:servers.php');
 
 }
-$dbhost =  $_SESSION['username'];
+$dbhost =  $_SESSION['server'];
 $dbuser = $_SESSION['username'];
 $dbpass = $_SESSION['password'];
 //$dbname = 'gdi';

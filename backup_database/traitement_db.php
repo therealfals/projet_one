@@ -21,7 +21,7 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
 </script>
 <?php
 if (!empty($_GET)){
-    $servername =  $_SESSION['username'];
+    $servername =  $_SESSION['server'];
     $username = $_SESSION['username'];
     $password = $_SESSION['password'];
     $conn = new PDO("mysql:host=$servername;dbname=".$_GET['dbname'], $username, $password);
