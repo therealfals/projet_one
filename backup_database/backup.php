@@ -25,19 +25,13 @@ if (!empty($_GET['table']) && !empty($_GET['db'])){
             //  echo $result["msg"];
         }
     }
-    echo "Les tables ont été backupées avec succés! (".count($ok)."/$size)";
+    echo "Les tables ont été backupées avec succés! (".count($ok)."/$size)<button style='cursor: pointer;color:white;border-radius: 5px;height: 30px; border:solid 1px red;background-color: red;' onclick='goBack()'>Precedent</button>";
 
-  //  var_dump($_GET);
-    exit();
-    $result=backup_tables($dbhost, $dbuser, $dbpass, $_GET['db'], $_GET['table']);
-    if($result['isOk']==true){
-        echo $result["msg"];
-    }
-}
+ }
 if (empty($_GET['table']) && !empty($_GET['db'])){
     if (count($_GET)==2){
         $result=backup_tables($dbhost, $dbuser, $dbpass, $_GET['db'],"*");
-        echo "<p>La bases a été backupée avec succés! </p><br><button style='cursor: pointer;color:white;border-radius: 5px;height: 30px; border:solid 1px red;background-color: red;' onclick='goBack()'>Precedent</button>";
+        echo "La base a été backupée avec succés!<button style='cursor: pointer;color:white;border-radius: 5px;height: 30px; border:solid 1px red;background-color: red;' onclick='goBack()'>Precedent</button>";
         exit();
 
     }
@@ -49,20 +43,10 @@ if (empty($_GET['table']) && !empty($_GET['db'])){
         $result=backup_tables($dbhost, $dbuser, $dbpass, $tab["$i"],"*");
         if($result['isOk']==true){
             $ok[]=$tab["$i"];
-          //  echo $result["msg"];
-        }
+         }
     }
-        echo "Les bases ont été backupées avec succés! (".count($ok)."/$size)<br><button style='cursor: pointer;color:white;border-radius: 5px;height: 30px; border:solid 1px red;background-color: red;' onclick='goBack()'>Precedent</button>";
+        echo "Les bases ont été backupées avec succés! (".count($ok)."/$size).<button style='cursor: pointer;color:white;border-radius: 5px;height: 30px; border:solid 1px red;background-color: red;' onclick='goBack()'>Precedent</button>";
     //var_dump($_GET);
     exit();
-    unset($_GET[(count($_GET)-1)]);
-    for ($i=2;$i<(count($_GET)-1);$i++){
-        echo $_GET["db$i"]."<br>";
-    }
-    var_dump($_GET);exit();
-    $result=backup_tables($dbhost, $dbuser, $dbpass, $_GET['db'],"*");
-    if($result['isOk']==true){
-        echo $result["msg"];
-    }
-}
+   }
 
