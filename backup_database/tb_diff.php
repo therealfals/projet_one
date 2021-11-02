@@ -17,7 +17,7 @@ require_once 'fonctions.php';
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 </head>
 <body>
-<button class="m-2 mt-2 btn btn-danger rounded rounded-pill" onclick="goBack()">Précédent</button>
+<button class="m-2 mt-2 btn btn-sm btn-warning rounded rounded-pill" onclick="goBack()">Précédent</button>
 <a href="logout.php" class="m-2 mt-2 btn btn-danger rounded rounded-pill float-right" >Se deconnecter</a>
 
 <script>
@@ -97,7 +97,7 @@ while($rows = $queryDb2->fetch(PDO::FETCH_ASSOC)){
 
 }
  $diff=array_diff($basesDb1,$basesDb2);
-echo "<div class='row'><div  class='col-6 '><h5 class='text-center mb-2'> Liste des colonnes presentes dans <strong>".$_GET['tb1']."</strong> et non dans la base <strong>".$_GET['tb2']."</strong>  (".count($diff).")</h5> <div style='height: 450px;'   class='overflow-auto'>";
+echo "<div class='row'><div  class='col-6 '><h5 class='text-center mb-2'> Liste des colonnes presentes dans <strong>".$_GET['tb1']."</strong> et non dans la base <strong>".$_GET['tb2']."</strong>  (".count($diff).")</h5> <div style='height: 350px;'   class='overflow-auto'>";
 $requete1="";
 if (count($diff)>0){
     $requete1.="ALTER TABLE ".$_GET['tb2']."  ";
@@ -138,7 +138,7 @@ echo "</div><form method='post'><input type='hidden' name='diffTb' value='$reque
 echo "<h3 class='text-center'>Requete Sql</h3><textarea rows='10' readonly class='form-control'>$requete1</textarea><div class='col-12 text-center mt-3 mb-5'><input type='submit' name='backup' value='Faire un backup' class='btn btn-outline-warning '>&nbsp;<input type='submit' value='Executer' name='execute'  class='btn btn-outline-danger'></div></div></form>";
 
 $diff=array_diff($basesDb2,$basesDb1);
-echo "<div class='col-6'><h5 class='text-center mb-2'>Liste des tables présentes dans la base <strong>".$_GET['tb2']."</strong> et non dans la base <strong>".$_GET['tb1']."</strong> (".count($diff).") </h5><div style='height: 450px;'   class='overflow-auto'> ";
+echo "<div class='col-6'><h5 class='text-center mb-2'>Liste des tables présentes dans la base <strong>".$_GET['tb2']."</strong> et non dans la base <strong>".$_GET['tb1']."</strong> (".count($diff).") </h5><div style='height: 350px;'   class='overflow-auto'> ";
 $requete2=" ";
 $i=0;
 if (count($diff)>0){

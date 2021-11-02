@@ -141,7 +141,7 @@ foreach( $result as $p){
 echo "</select><input class='mt-3 btn btn-outline-danger' type='submit' value='Comparer'>*/echo "</div></form>";
 
 echo "<h2 class='text-center mt-5 mb-4'>Liste des bases de données</h2>
-<div class='col-10 text-center mx-auto'><input onclick='checkVerif(\"backup\")' type='button' value='Faire un backup'>&nbsp;<input type='button' onclick='checkVerif(\"compare\")' value='Comparer'></div>
+<div class='col-10 text-center mx-auto'><input  class='btn btn-sm btn-outline-warning' onclick='checkVerif(\"backup\")' type='button' value='Faire un backup'>&nbsp;<input  class='btn btn-sm btn-outline-danger' type='button' onclick='checkVerif(\"compare\")' value='Comparer'></div>
 <div class='row col-10 mx-auto'>
 <h2 id='dbTxt' class='text-center text-danger '></h2>
 <form method=\"get\" action=\"traitement_db.php\">
@@ -153,13 +153,13 @@ echo "<h2 class='text-center mt-5 mb-4'>Liste des bases de données</h2>
 
 </form>
 ";
-echo"<table class='table table-striped'><thead><th>Base de donnée</th><th>Actions</th></thead><tbody>";
+echo"<div class='overflow-auto' style='height: 350px'><table class='table table-striped'><thead><th>Base de donnée</th><th>Actions</th></thead><tbody>";
 foreach( $result as $p){
 
     echo("<tr><td>".$p ["schema_name"])."</td><td><form style='display: inline-block' method='get' action='traitement_db.php'>  <input   class='btn btn-sm btn-outline-warning' type='submit' name='submit' value='Tables'>  <input   class='btn btn-outline-danger' type='hidden' name='dbname' value='".$p ["schema_name"]."'></form><a href='list_backup.php?db=".$p ["schema_name"]."' style='margin-left:5px !important' type='button' class='btn btn-sm btn-outline-danger mr-3' >Liste des backup</a>&nbsp;<input name='db[]' type='checkbox' class='backup' value='".$p ["schema_name"]."'></td></tr>";
 }
 
-echo '</tbody></table></div>';
+echo '</tbody></table></div></div>';
 ?>
 
 <?php

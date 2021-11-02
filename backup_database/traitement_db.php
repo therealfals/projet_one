@@ -79,7 +79,7 @@ if (!empty($_GET)){
     $query->execute();
     $result=$query->fetchAll() ;
 
-    echo "<input type='hidden' id='dbNameTxt' value='".$_GET['dbname']."'><h3 class='text-center'>Base de donnée: ".$_GET['dbname']."<br><div><a class='btn btn-outline-warning' href='backup.php?db=".$_GET['dbname']."&type=db'>Faire un backup</a><a class='btn btn-outline-danger' style='margin-left: 5px !important;' href='list_backup.php?db=".$_GET['dbname']."'>Voir les backup</a></div></h3>";
+    echo "<input type='hidden' id='dbNameTxt' value='".$_GET['dbname']."'><h3 class='text-center'>Base de donnée: ".$_GET['dbname']."<br><div><a class='btn btn-sm btn-outline-warning' href='backup.php?db=".$_GET['dbname']."&type=db'>Faire un backup</a><a class='btn btn-sm btn-outline-danger' style='margin-left: 5px !important;' href='list_backup.php?db=".$_GET['dbname']."'>Voir les backup</a></div></h3>";
   echo "<form method='get' action='tb_diff.php'>
 <input type='hidden' name='db' value='".$_GET['dbname']."'><div class=' col-8 mx-auto '>
 <input type='hidden' id='tb1Val' name='tb1'>
@@ -108,17 +108,17 @@ if (!empty($_GET)){
     echo "</select>";
     echo "<input class='btn btn-outline-danger mt-3' type='submit' name='compare' value='Comparer'>*/echo "</div></form>";
     echo "<div class=' col-8 mx-auto'><h3 class='mb-2 mt-2 text-center'>Tables</h3>
- <div class='col-12 text-center'><input onclick='checkVerif(\"backup\")' type='button' value='Faire un backup'>&nbsp;<input type='button' onclick='checkVerif(\"compare\")' value='Comparer'></div>
- <table class='table table-striped'><thead> <th>Nom table</th><th>Actions</th> </thead><tbody>";
+ <div class='col-12 text-center'><input   class='btn btn-sm btn-outline-warning' onclick='checkVerif(\"backup\")' type='button' value='Faire un backup'>&nbsp;<input  class='btn btn-sm btn-outline-danger' type='button' onclick='checkVerif(\"compare\")' value='Comparer'></div>
+ <div class='overflow-auto mt-2' style='height: 350px'><table class='table table-striped'><thead> <th>Nom table</th><th>Actions</th> </thead><tbody>";
 
     foreach($result as $rows ){
         $rows=array_values($rows);
         if( isset($rows[0])){
-            echo "<tr><td>". $rows[0]."</td><td><a class='btn btn-outline-danger ml-1' href='list_backup.php?table=$rows[0]&db=".$_GET['dbname']."&type=table'>Voir les backup</a>&nbsp;<input name='tb[]' type='checkbox' class='backup' value='".$rows[0]."'></td></tr>";
+            echo "<tr><td>". $rows[0]."</td><td><a class='btn btn-sm btn-outline-danger ml-1' href='list_backup.php?table=$rows[0]&db=".$_GET['dbname']."&type=table'>Voir les backup</a>&nbsp;<input name='tb[]' type='checkbox' class='backup' value='".$rows[0]."'></td></tr>";
         }
 
     }
-    echo "</tbody></table> </div>";
+    echo "</tbody></table> </div></div>";
 
 
 //MySQL server and database

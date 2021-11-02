@@ -109,7 +109,7 @@ while($rows = $queryDb2->fetch(PDO::FETCH_ASSOC)){
 $diffDb1="";
 $diff=array_diff($basesDb1,$basesDb2);
  echo "<div class='row'>
-<div  class='col-6 '><h5 class='text-center mb-2'>Liste des tables presentes dans <strong>".$_GET['db1']."</strong> et non dans la base <strong>".$_GET['db2']."</strong>  (".count($diff).")</h5><div style='height: 450px;'   class='overflow-auto'>";
+<div  class='col-6 '><h5 class='text-center mb-2'>Liste des tables presentes dans <strong>".$_GET['db1']."</strong> et non dans la base <strong>".$_GET['db2']."</strong>  (".count($diff).")</h5><div style='height: 350px;'   class='overflow-auto'>";
 if (count($diff)>0){
     echo "<ul>";
     foreach ($diff as $differences){
@@ -127,7 +127,7 @@ echo "<h3 class='text-center'>Requete Sql</h3><textarea rows='10' readonly class
 $diff2=array_diff($basesDb2,$basesDb1);
 
 $diffDb2="";
- echo "<div class='col-6'><h5 class='text-center mb-2'>Liste des tables présentes dans la base <strong>".$_GET['db2']."</strong> et non dans la base <strong>".$_GET['db1']."</strong> (".count($diff2).")</h5><div style='height: 450px;'   class='overflow-auto'> ";
+ echo "<div class='col-6'><h5 class='text-center mb-2'>Liste des tables présentes dans la base <strong>".$_GET['db2']."</strong> et non dans la base <strong>".$_GET['db1']."</strong> (".count($diff2).")</h5><div style='height: 350px;'   class='overflow-auto'> ";
 if (count($diff2)>0){
     echo "<ul>";
     foreach ($diff2 as $differences){

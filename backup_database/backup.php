@@ -35,6 +35,12 @@ if (!empty($_GET['table']) && !empty($_GET['db'])){
     }
 }
 if (empty($_GET['table']) && !empty($_GET['db'])){
+    if (count($_GET)==2){
+        $result=backup_tables($dbhost, $dbuser, $dbpass, $_GET['db'],"*");
+        echo "<p>La bases a été backupée avec succés! </p><br><button style='cursor: pointer;color:white;border-radius: 5px;height: 30px; border:solid 1px red;background-color: red;' onclick='goBack()'>Precedent</button>";
+        exit();
+
+    }
     $ok=array();
     $size=0;
     $tab=array_values($_GET);
@@ -46,7 +52,7 @@ if (empty($_GET['table']) && !empty($_GET['db'])){
           //  echo $result["msg"];
         }
     }
-        echo "Les bases ont été backupées avec succés! (".count($ok)."/$size)";
+        echo "Les bases ont été backupées avec succés! (".count($ok)."/$size)<br><button style='cursor: pointer;color:white;border-radius: 5px;height: 30px; border:solid 1px red;background-color: red;' onclick='goBack()'>Precedent</button>";
     //var_dump($_GET);
     exit();
     unset($_GET[(count($_GET)-1)]);
