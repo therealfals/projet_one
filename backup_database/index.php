@@ -2,8 +2,9 @@
 if (session_status()==PHP_SESSION_NONE){
     session_start();
 }
+
 if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
-    header('Location:home.php');
+    header('Location:servers.php');
 
 }
 ?>
@@ -12,7 +13,7 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 </head>
 <body>
- <a href="logout.php" class="m-2 mt-2 btn btn-danger rounded rounded-pill float-right" >Se deconnecter</a>
+ <a href="servers.php" class="m-2 mt-2 btn btn-warning rounded rounded-pill float-right" >Précédent</a>
 
 <script>
     function goBack() {
@@ -40,7 +41,7 @@ while($db = mysql_fetch_row($set))
 $dbs[] = $db[0];
 echo implode('<br/>', $dbs);*/
 
-$servername = "localhost";
+$servername = $_SESSION['server'];
 $username = $_SESSION['username'];
 $password = $_SESSION['password'];
 try {
@@ -100,7 +101,7 @@ echo "<h2 class='text-center mt-5 mb-4'>Liste des bases de données</h2><div cla
 echo"<table class='table table-striped'><thead><th>Base de donnée</th><th>Actions</th></thead><tbody>";
 foreach( $result as $p){
 
-    echo("<tr><td>".$p ["schema_name"])."</td><td><button style='margin-left:5px !important' type='button' class='btn btn-sm btn-outline-danger rounded rounded-pill' onclick='connectDatabase(\"".$p ["schema_name"]."\")'>Choisir</button></td></tr>";
+    echo("<tr><td>".$p ["schema_name"])."</td><td><form style='display: inline-block' method='get' action='traitement_db.php'>  <input   class='btn btn-outline-danger' type='submit' name='submit' value='Se connecter'>  <input   class='btn btn-outline-danger' type='hidden' name='dbname' value='".$p ["schema_name"]."'></form><a href='backup.php?db=".$p ["schema_name"]."&type=db' style='margin-left:5px !important' type='button' class='btn btn-sm btn-outline-warning'>Faire un backup</a><a href='list_backup.php?db=".$p ["schema_name"]."' style='margin-left:5px !important' type='button' class='btn btn-sm btn-outline-danger mr-3' >Liste des backup</a>&nbsp;<input name='db[]' type='hidden' value='".$p ["schema_name"]."'></td></tr>";
 }
 
 echo '</tbody></table></div>';

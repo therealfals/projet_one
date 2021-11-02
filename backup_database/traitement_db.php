@@ -3,7 +3,7 @@ if (session_status()==PHP_SESSION_NONE){
     session_start();
 }
 if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
-    header('Location:home.php');
+    header('Location:servers.php');
 
 }?>
 <html>
@@ -11,7 +11,7 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 </head>
 <body>
-<button class="m-2 mt-2 btn btn-danger rounded rounded-pill" onclick="goBack()">Précédent</button>
+<a href="index.php" class="m-2 mt-2 btn btn-warning rounded rounded-pill" >Précédent</a>
 <a href="logout.php" class="m-2 mt-2 btn btn-danger rounded rounded-pill float-right" >Se deconnecter</a>
 
 <script>
@@ -21,7 +21,7 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
 </script>
 <?php
 if (!empty($_GET)){
-    $servername = "localhost";
+    $servername =  $_SESSION['username'];
     $username = $_SESSION['username'];
     $password = $_SESSION['password'];
     $conn = new PDO("mysql:host=$servername;dbname=".$_GET['dbname'], $username, $password);

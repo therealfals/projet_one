@@ -37,6 +37,7 @@ function backup_tables($host, $user, $pass, $dbname, $tables = '*') {
         mkdir("sauvegarde/bases/".$dbname."/bases", 0777, true);
     }
     $return = '';
+    $returnSql = '';
     //cycle through
     foreach($tables as $table)
     {
@@ -48,8 +49,10 @@ function backup_tables($host, $user, $pass, $dbname, $tables = '*') {
         $num_rows = mysqli_num_rows($result);
 
         $return.= 'DROP TABLE IF EXISTS '.$table.';';
+        $returnSql.= 'DROP TABLE IF EXISTS '.$table.';';
         $row2 = mysqli_fetch_row(mysqli_query($link, 'SHOW CREATE TABLE '.$table));
         $return.= "\n\n".$row2[1].";\n\n";
+        $returnSql.= "\n\n".$row2[1].";\n\n";
         $counter = 1;
 
         //Over tables
@@ -81,6 +84,7 @@ function backup_tables($host, $user, $pass, $dbname, $tables = '*') {
             }
         }
         $return.="\n\n\n";
+        $returnSql.="\n\n\n";
     }
 
     //save file
@@ -91,12 +95,12 @@ function backup_tables($host, $user, $pass, $dbname, $tables = '*') {
         $handle = fopen("sauvegarde/bases/".$dbname."/tables/".$table."/".$fileName,'w+');
 
     }
-    fwrite($handle,$return);
+    fwrite($handle,$returnSql);
     if(fclose($handle)){
         $msg=$isAll=='*'?"La base de donnée <strong>".$dbname."<strong> a été sauvegardée avec succes":"La table <strong> $table </strong>de la base de donnée<strong> $dbname</strong> a été sauvegardée avec succés";
         $msg.="<br> <span onclick=\"goBack()\" style='cursor: pointer' >Précédent</span>";
-        echo  "<h3 style='text-align:center;color:green'>$msg</h3>";
-        exit;
+        //echo  "<h3 style='text-align:center;color:green'>$msg</h3>";
+        return array("isOk"=>true,"msg"=>$msg,"sql"=>$returnSql);
     }
 }
 
@@ -141,3 +145,35 @@ function restoreDatabaseTables($dbHost, $dbUsername, $dbPassword, $dbName, $file
     }
     return false;
     }
+
+function restoreDatabaseDiff($dbHost, $dbUsername, $dbPassword, $dbName, $sql){
+    // Connect & select the database
+    $db =  mysqli_connect($dbHost, $dbUsername, $dbPassword, $dbName);
+    $req=str_replace('`',' ',$sql);
+if (mysqli_query($db,$req)){
+    var_dump($req);
+
+}else{
+   echo mysqli_error($db);
+   echo "<br>";
+}
+    var_dump($req);
+
+exit();
+    // Temporary variable, used to store current query
+    $templine = '';
+
+        $error = '';
+    $db->query($sql);
+                 if(!$db->query($sql)){
+                    var_dump($sql);
+                    exit();
+                    $error .= 'Error performing query "<b>' . $templine . '</b>": ' . $db->error . '<br /><br />';
+                }
+
+
+
+        return !empty($error)?$error:true;
+
+
+ }

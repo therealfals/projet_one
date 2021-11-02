@@ -3,7 +3,7 @@ if (session_status()==PHP_SESSION_NONE){
     session_start();
 }
 if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
-    header('Location:home.php');
+    header('Location:servers.php');
 
 }?>
 <html>
@@ -11,7 +11,7 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 </head>
 <body>
-<a href="traitement_db.php?dbname=<?=$_GET['db']?>" class="m-2 mt-2 btn btn-danger rounded rounded-pill" onclick="goBack()">Précédent</a>
+<a href="traitement_db.php?dbname=<?=$_GET['db']?>" class="m-2 mt-2 btn btn-warning rounded rounded-pill" onclick="goBack()">Précédent</a>
 <a href="logout.php" class="m-2 mt-2 btn btn-danger rounded rounded-pill float-right" >Se deconnecter</a>
 
 <script>
@@ -35,14 +35,13 @@ if (!empty($_GET['action'])){
 
     }
     if ($_GET['action'] =='restore') {
-        $dbHost     = 'localhost';
+        $dbHost     =  $_SESSION['server'];
         $dbUsername = $_SESSION['username'];
         $dbPassword = $_SESSION['password'];
         $dbName     = $_GET['db'];
         $filePath   = "sauvegarde/bases/".$_GET['link']."/".$_GET['file'];
         $success=restoreDatabaseTables($dbHost, $dbUsername, $dbPassword, $dbName, $filePath);
-
-        if ($success==true){
+        if ($success===true){
             if($_GET['type'] == 'db'){
                 echo "<br><div class='alert alert-success col-6 mx-auto'><h4 class='text-center '>La base <strong>$dbName</strong> a été restaurée avec succés</h4></div>";
 
@@ -50,6 +49,9 @@ if (!empty($_GET['action'])){
                 echo "<br><div class='alert alert-success col-6 mx-auto'><h4 class='text-center '>La table <strong>".$_GET['table']." </strong>de la base <strong>$dbName</strong> a été restaurée avec succés</h4></div>";
 
             }
+        }else{
+            echo "<br><div class='alert alert-danger col-6 mx-auto'><h4 class='text-center'>Erreur lors de la restauration</h4><p>$success</p></div>";
+
         }
     }
 }
@@ -92,9 +94,10 @@ if (!empty($_GET['table']) && !empty($_GET['db']) && isset($_GET['type'])){
 if (empty($_GET['table']) && !empty($_GET['db'])){
     echo "<h3 class='text-center'>Liste des sauvegarges de la base <strong>".$_GET['db']." </strong></h3>
 <div class='col-8 mx-auto'> <table class='table table-striped'><thead><th>Date</th><th>Actions</th></thead><tbody>";
+    $cpt=0;
+
     if (file_exists("sauvegarde/bases/".$_GET['db']."/bases/")){
 $_GET['table']="";
-$cpt=0;
         if (file_exists("sauvegarde/bases/".$_GET['db']."/bases/".$_GET['table'])){
 
         if ($handle = opendir("sauvegarde/bases/".$_GET['db']."/bases/".$_GET['table'])) {
