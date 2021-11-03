@@ -11,7 +11,17 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 </head>
 <body>
-<a href="traitement_db.php?dbname=<?=$_GET['db']?>" class="m-2 mt-2 btn btn-warning rounded rounded-pill" onclick="goBack()">Précédent</a>
+<?php if (!isset($_GET['table']) && !isset($_GET['type'])){
+    echo "<a href='servers.php' class=\"m-2 mt-2 btn btn-warning rounded rounded-pill\" >Précédent</a>";
+}elseif (!isset($_GET['table']) && isset($_GET['type'])){
+    echo "<a href='traitement_db.php?dbname=".$_GET['db']."' class=\"m-2 mt-2 btn btn-warning rounded rounded-pill\" >Précédent</a>";
+
+}else{
+    echo "<a href=\"traitement_db.php?dbname=".$_GET['db']."\" class=\"m-2 mt-2 btn btn-warning rounded rounded-pill\" onclick=\"goBack()\">Précédent</a>";
+
+}
+
+    ?>
 <a href="logout.php" class="m-2 mt-2 btn btn-danger rounded rounded-pill float-right" >Se deconnecter</a>
 
 <script>

@@ -12,7 +12,7 @@ if (session_status()==PHP_SESSION_NONE){
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
-<body>
+<body style="background-color: #F0F0F0">
 
 <form method="post">
     <input type="hidden" name="serverTxt" id="serverTxt">
@@ -278,24 +278,31 @@ if (session_status()==PHP_SESSION_NONE){
 
     }
 </script>
+
 <?php
+//
 if (!empty($_POST['setData'])){
-    $_SESSION['server'] = $_POST['serverTxt'];
-    $_SESSION['username'] = $_POST['userTxt'];
-    $_SESSION['password'] = $_POST['pwdTxt'];
-    $servername = $_SESSION['server'];
-    $username = $_SESSION['username'];
-    $password = $_SESSION['password'];
+
+ unset($_SESSION['server']);
+    unset  ($_SESSION['username']);
+    unset( $_SESSION['password']);
     try {
-        $conn = new PDO("mysql:host=$servername;", $username, $password);
+        $conn = new PDO("mysql:host=".$_POST['serverTxt'].";", $_POST['userTxt'],  $_POST['pwdTxt']);
         // set the PDO error mode to exception
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         // echo "Connected successfully";
+        $_SESSION['server'] = $_POST['serverTxt'];
+        $_SESSION['username'] = $_POST['userTxt'];
+        $_SESSION['password'] = $_POST['pwdTxt'];
     } catch(PDOException $e) {
         echo "<div style='height: 200px;width: 100%;margin: auto;padding: 10px;text-align: center' class='col-6 mx-auto alert alert-danger'><h3 style='color: orangered' class='text-center'>Erreur lors de la connexion!  Veuillez vérifier vos identifiants!</h3> </div>";// . $e->getMessage();
-        exit();
+       // exit();
     }
-    echo "<script>window.location.href='index.php'</script>";
+
+  //  echo "<script>window.location.href='index.php'</script>";
+}
+if (!empty($_SESSION['server'])){
+    require_once( 'index.php');
 }
 ?>
 </body>

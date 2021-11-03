@@ -45,7 +45,7 @@ if (empty($_GET['table']) && !empty($_GET['db'])){
             $ok[]=$tab["$i"];
          }
     }
-        echo "Les bases ont été backupées avec succés! (".count($ok)."/$size).<button style='cursor: pointer;color:white;border-radius: 5px;height: 30px; border:solid 1px red;background-color: red;' onclick='goBack()'>Precedent</button>";
+        echo "Les bases ont été backupées avec succés! (".count($ok)."/$size).<button  style='cursor: pointer;color:white;border-radius: 5px;height: 30px; border:solid 1px red;background-color: red;' > <a style='text-decoration: none;color: white' href='servers.php'>Precedent</a></button>";
     //var_dump($_GET);
     exit();
    }
