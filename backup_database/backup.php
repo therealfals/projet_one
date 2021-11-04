@@ -3,7 +3,7 @@ if (session_status()==PHP_SESSION_NONE){
     session_start();
 }
 if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
-    header('Location:servers.php');
+    header('Location:index.php');
 
 }
 $dbhost =  $_SESSION['server'];
@@ -45,7 +45,7 @@ if (empty($_GET['table']) && !empty($_GET['db'])){
             $ok[]=$tab["$i"];
          }
     }
-        echo "Les bases ont été backupées avec succés! (".count($ok)."/$size).<button  style='cursor: pointer;color:white;border-radius: 5px;height: 30px; border:solid 1px red;background-color: red;' > <a style='text-decoration: none;color: white' href='servers.php'>Precedent</a></button>";
+        echo "Les bases ont été backupées avec succés! (".count($ok)."/$size).<button  style='cursor: pointer;color:white;border-radius: 5px;height: 30px; border:solid 1px red;background-color: red;' > <a style='text-decoration: none;color: white' href='index.php'>Precedent</a></button>";
     //var_dump($_GET);
     exit();
    }

@@ -3,7 +3,7 @@ if (session_status()==PHP_SESSION_NONE){
     session_start();
 }
 if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
-    header('Location:servers.php');
+    header('Location:index.php');
 
 }
 
@@ -19,7 +19,7 @@ require_once "fonctions.php";
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 </head>
 <body>
-<a  href='servers.php' class="m-2 mt-2 btn btn-warning rounded rounded-pill" >Précédent</a>
+<a  href='index.php' class="m-2 mt-2 btn btn-warning rounded rounded-pill" >Précédent</a>
 <a href="logout.php" class="m-2 mt-2 btn btn-danger rounded rounded-pill float-right" >Se deconnecter</a>
 
 <script>

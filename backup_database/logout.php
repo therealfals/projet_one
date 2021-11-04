@@ -5,5 +5,5 @@ if (session_status()==PHP_SESSION_NONE){
 unset($_SESSION["username"]);
 unset($_SESSION["password"]);
 unset($_SESSION["server"]);
-header('Location:servers.php');
+header('Location:index.php');
 

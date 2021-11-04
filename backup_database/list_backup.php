@@ -3,7 +3,7 @@ if (session_status()==PHP_SESSION_NONE){
     session_start();
 }
 if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
-    header('Location:servers.php');
+    header('Location:index.php');
 
 }?>
 <html>
@@ -12,7 +12,7 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
 </head>
 <body>
 <?php if (!isset($_GET['table']) && !isset($_GET['type'])){
-    echo "<a href='servers.php' class=\"m-2 mt-2 btn btn-warning rounded rounded-pill\" >Précédent</a>";
+    echo "<a href='index.php' class=\"m-2 mt-2 btn btn-warning rounded rounded-pill\" >Précédent</a>";
 }elseif (!isset($_GET['table']) && isset($_GET['type'])){
     echo "<a href='traitement_db.php?dbname=".$_GET['db']."' class=\"m-2 mt-2 btn btn-warning rounded rounded-pill\" >Précédent</a>";
 

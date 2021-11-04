@@ -3,175 +3,307 @@ if (session_status()==PHP_SESSION_NONE){
     session_start();
 }
 
-if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
-    header('Location:servers.php');
 
-}
 ?>
+
 <html>
 <head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
-<body>
- <!--<a href="servers.php" class="m-2 mt-2 btn btn-warning rounded rounded-pill float-right" >Précédent</a>-->
+<body style="background-color: #F0F0F0">
 
-<script>
-    function goBack() {
-        window.history.back();
+<form method="post">
+    <input type="hidden" name="serverTxt" id="serverTxt">
+    <input type="hidden" name="userTxt" id="userTxt">
+    <input type="hidden" name="pwdTxt" id="pwdTxt">
+    <input  id="setData" type="submit" style="display: none" name="setData" >
+</form>
+
+<div id="accordian">
+    <ul class="show-dropdown">
+        <li>
+            <span  ><i class="fas fa-tachometer-alt"></i>Liste des serveurs</span>
+        </li>
+        <?php
+        $pp=0;
+        $servername = "localhost";
+        $username ="root";
+        $password ="";
+        try {
+            $conn = new PDO("mysql:host=$servername;", $username, $password);
+            // set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // echo "Connected successfully";
+        } catch(PDOException $e) {
+            echo "<div class='col-6 mx-auto alert alert-danger'><h3 class='text-center'>Erreur lors de la connexion!<br> Veuillez vérifier vos identifiants!</h3> </div>";// . $e->getMessage();
+            exit();
+        }
+        $statement = $conn->query("SELECT * FROM mysql.user as u GROUP BY u.host");
+        $result=$statement->fetchAll() ;
+        if($result){
+            /* echo "<h3 class='text-center mt-4 mb-5'>Liste des serveurs disponibles</h3>";
+             echo "<select class=' form-control' name='server'>";*/
+            $op=0;
+            foreach ($result as $host){
+                $statement = $conn->prepare("SELECT * FROM mysql.user as u  WHERE u.Host = ?");
+                $result=$statement->execute([$host['Host']]);
+
+                $result=$statement->fetchAll() ;
+
+                $op++;
+
+                echo " <li>
+            <span onclick='getServer(\"".$host['Host']."\")'  ><i class='fas fa-server'></i> ".$host['Host']."</span>
+            <ul>";
+
+                foreach ($result as $host){
+                    if(trim($host['User']) !=""){
+                        echo "           <li><span href='javascript:void(0);'>". $host['User']." &nbsp; <input class='forms' id=\"". $host['User'],$pp."\" type='password'> <button  onclick='getUsrPwd(\"".$host['User']."\",$pp)'  class='btns'>Se connecter</button></a></li>";
+
+                    }
+                    $pp++;
+                }
+                echo"    </ul>
+        </li>";
+            }
+
+        }
+        ?>
+
+
+    </ul>
+
+</div>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
     }
-    function checkVerif(type) {
-        var cboxes = document.getElementsByName('db[]');
-        var len = cboxes.length;
+    /* Scrollbar-effect------- */
+    #accordian::-webkit-scrollbar {
+        width: 5px;
+        height: 8px;
+    }
+    #accordian::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background-color: #e4e4e4;
+    }
+    #accordian::-webkit-scrollbar-thumb {
+        background: #0089ff;
+        border-radius: 10px;
+        transition: 0.5s;
+    }
+    #accordian::-webkit-scrollbar-thumb:hover {
+        background: #d5b14c;
+        transition: 0.5s;
+    }
 
-        if (type=='backup'){
-            let cpt=1;
-            let hrefLink="backup.php?type=db&db=true&db1=";
-            for (var i=0; i<len; i++) {
-                if (cboxes[i].checked){
-                    cpt++;
-                        hrefLink+= cboxes[i].value+"&db"+cpt+"="
 
+
+    /* --------- */
+    body {
+        background: #C8CACE;
+        font-family: Nunito, arial, verdana;
+    }
+
+    #accordian {
+        background: #fff;
+        width: 450px;
+        padding: 10px;
+        float: left;
+        height: 100vh;
+        overflow-x: hidden;
+    }
+
+
+    #accordian a {
+
+
+
+    }
+
+
+    i {
+        margin-right: 10px;
+    }
+
+    #accordian li {
+        list-style-type: none;
+    }
+
+    #accordian ul li span{
+        color: black;
+        text-decoration: none;
+        font-size: 15px;
+        display: block;
+        /* 	line-height: 34px; */
+        padding: 12px 15px;
+        transition: all 0.15s;
+        position: relative;
+        border-radius: 3px;
+    }
+
+    #accordian>ul.show-dropdown>li.active>span,
+    #accordian>ul>li>ul.show-dropdown>li.active>span,
+    #accordian>ul>li>ul>li>ul.show-dropdown>li.active>span,
+    #accordian>ul>li>ul>li>ul>li>ul.show-dropdown>li.active>span,
+    #accordian>ul>li>ul>li>ul>li>ul>li>ul.show-dropdown>li.active>span{
+        background-color: #E9EBEC;
+        color: #0089ff;
+        box-shadow: 0px 1px 2px rgba(0, 137, 255, 0.2);
+    }
+
+    #accordian>ul>li>ul,
+    #accordian>ul>li>ul>li>ul,
+    #accordian>ul>li>ul>li>ul>li>ul,
+    #accordian>ul>li>ul>li>ul>li>ul>li>ul {
+        display: none;
+    }
+
+
+    #accordian>ul>li.active>ul.show-dropdown,
+    #accordian>ul>li>ul>li.active>ul.show-dropdown,
+    #accordian>ul>li>ul>li>ul>li.active>ul.show-dropdown,
+    #accordian>ul>li>ul>li>ul>li>ul>li.active>ul.show-dropdown {
+        display: block;
+    }
+
+    #accordian>ul>li>ul,
+    #accordian>ul>li>ul>li>ul,
+    #accordian>ul>li>ul>li>ul>li>ul,
+    #accordian>ul>li>ul>li>ul>li>ul>li>ul {
+        padding-left: 20px;
+    }
+
+    #accordian span:not(:only-child):after {
+        content: "\f105";
+        position: absolute;
+        right: 20px;
+        top: 14px;
+        font-size: 15px;
+        font-family: "Font Awesome 5 Free";
+        display: inline-block;
+        padding-right: 3px;
+        vertical-align: middle;
+        font-weight: 900;
+        transition: 0.5s;
+    }
+    span{
+        cursor: pointer;
+    }
+    #accordian .active>span:not(:only-child):after {
+        transform: rotate(90deg);
+    }
+    .forms{
+
+
+        height: 30px;
+        border: black 1px solid;
+        padding: 6px;
+        border-radius: 5px;
+
+    }
+    .btns{
+
+        background-color: #0089ff;
+        height: 30px;
+        border: #0089ff 1px solid;
+        color: white;
+        padding: 6px;
+        cursor: pointer;
+        border-radius: 5px;
+
+    }
+</style>
+<script>
+    // -------multilevel-accordian-menu---------
+    $(document).ready(function() {
+        $("#accordian span").click(function() {
+            var link = $(this);
+            var closest_ul = link.closest("ul");
+            var parallel_active_links = closest_ul.find(".active")
+            var closest_li = link.closest("li");
+            var link_status = closest_li.hasClass("active");
+            var count = 0;
+
+            closest_ul.find("ul").slideUp(function() {
+                if (++count == closest_ul.find("ul").length){
+                    parallel_active_links.removeClass("active");
+                    parallel_active_links.children("ul").removeClass("show-dropdown");
                 }
-              //  console.log(i + (cboxes[i].checked?' checked ':' unchecked ') + cboxes[i].value);
-            }
-            if (cpt==1){
-                alert("Veuillez choisir au moins une base !")
-                return;
-            }
-            hrefLink+=(cpt-1)
-            window.location.href=hrefLink
-            //alert(hrefLink)
-          //  const backupBtn=document.getElementById('backupBtn');
-           // backupBtn.setAttribute('href',hrefLink)
+            });
 
-        }else if (type =='compare'){
-            let cptr=0;
-            let tabDb=[];
-            for (var i=0; i<len; i++) {
-                if (cboxes[i].checked){
-                    tabDb.push(cboxes[i].value)
-                    cptr++;
-                }
+            if (!link_status) {
+                closest_li.children("ul").slideDown().addClass("show-dropdown");
+                closest_li.parent().parent("li.active").find('ul').find("li.active").removeClass("active");
+                link.parent().addClass("active");
             }
-            if (cptr<2 || cptr>2){
-                alert("La comparaison ne peut se faire qu'avec 2 tables");
-                return;
-            }
-            const db1Val=document.getElementById('db1Val');
-            db1Val.setAttribute("value", tabDb[0])
-            const db2Val=document.getElementById('db2Val');
-            db2Val.setAttribute("value", tabDb[1])
-             btnCmpr.click()
+        })
+    });
+
+
+
+
+
+
+    // --------for-active-class-on-other-page-----------
+    jQuery(document).ready(function($){
+        // Get current path and find target link
+        var path = window.location.pathname.split("/").pop();
+
+        // Account for home page with empty path
+        if ( path == '' ) {
+            path = 'index.html';
         }
 
-        //const t = document.querySelectorAll('.backup:checked')
-        //console.log(t)
+        var target = $('#accordian li a[href="'+path+'"]');
+        // Add active class to target link
+        target.parents("li").addClass('active');
+        target.parents("ul").addClass("show-dropdown");
+    });
+    function getServer(server) {
+
+        $('#serverTxt').val(server)
+    }
+    function getUsrPwd(usr,num) {
+        const srv=$('#serverTxt').val()
+        const id=`${usr}${num}`;
+        console.log(id)
+        const pwd=$("#"+id).val()
+        $('#userTxt').val(usr)
+        $('#pwdTxt').val(pwd)
+        $('#setData').click()
+
     }
 </script>
+
+<?php
+//
+if (!empty($_POST['setData'])){
+
+ unset($_SESSION['server']);
+    unset  ($_SESSION['username']);
+    unset( $_SESSION['password']);
+    try {
+        $conn = new PDO("mysql:host=".$_POST['serverTxt'].";", $_POST['userTxt'],  $_POST['pwdTxt']);
+        // set the PDO error mode to exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // echo "Connected successfully";
+        $_SESSION['server'] = $_POST['serverTxt'];
+        $_SESSION['username'] = $_POST['userTxt'];
+        $_SESSION['password'] = $_POST['pwdTxt'];
+    } catch(PDOException $e) {
+        echo "<div style='height: 200px;width: 100%;margin: auto;padding: 10px;text-align: center' class='col-6 mx-auto alert alert-danger'><h3 style='color: orangered' class='text-center'>Erreur lors de la connexion!  Veuillez vérifier vos identifiants!</h3> </div>";// . $e->getMessage();
+       // exit();
+    }
+
+  //  echo "<script>window.location.href='index.php'</script>";
+}
+if (!empty($_SESSION['server'])){
+    require_once( 'databases.php');
+}
+?>
 </body>
 </html>
-<script>
-    function connectDatabase(db) {
-        const y=document.getElementById("dbname")
-        const btn=document.getElementById("btn-connect")
-        btn.style.display="block";
-        y.value=db
-        const dbTxt=document.getElementById("dbTxt")
-        dbTxt.innerText=db
-     }
-
-</script>
-
-<?php
-/*$set = mysql_query('SHOW DATABASES;');
-$dbs = array();
-while($db = mysql_fetch_row($set))
-$dbs[] = $db[0];
-echo implode('<br/>', $dbs);*/
-
-$servername = $_SESSION['server'];
-$username = $_SESSION['username'];
-$password = $_SESSION['password'];
-try {
-    $conn = new PDO("mysql:host=$servername;", $username, $password);
-    // set the PDO error mode to exception
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-   // echo "Connected successfully";
-} catch(PDOException $e) {
-    echo "<div class='col-6 mx-auto alert alert-danger'><h3 class='text-center'>Erreur lors de la connexion!<br> Veuillez vérifier vos identifiants!</h3> </div>";// . $e->getMessage();
-exit();
-}
-//$dbh = new PDO('mysql:host=localhost;user=root;password=;dbname=baz');
-$statement = $conn->query('SHOW DATABASES');
-//print_r( $statement->fetchAll() );
-
-
-$query = "SELECT schema_name FROM information_schema.schemata WHERE schema_name
-    NOT IN ('information_schema', 'mysql', 'performance_schema', 'phpmyadmin')";
-$statement = $conn->query($query);
-$result=$statement->fetchAll() ;
-
-echo "<form method='get' action='db_diff.php'><div class='col-6 mx-auto'>
-<input type='hidden' id='db1Val' name='db1'>
-<input type='hidden' id='db2Val' name='db2'>
-<input type='submit' style='display: none' id='btnCmpr' name='btnCmpr'>
-";
-/*
-<h3 class='text-center mt-2 mb-2'>Comparer 2 bases de donées</h3>
-Choisir une base
-<select class='form-control' name='db1'>";
-
-foreach( $result as $p){
-
-    echo("<option value='".  $p ["schema_name"]."'>");
-    echo  $p ["schema_name"];
-    echo "</option>";
-}
-echo "</select>";
-
-echo "Choisir une base
-<select class='form-control'  name='db2'>";
-
-foreach( $result as $p){
-
-    echo("<option value='".  $p ["schema_name"]."'>");
-    echo  $p ["schema_name"];
-    echo "</option>";
-}
-echo "</select><input class='mt-3 btn btn-outline-danger' type='submit' value='Comparer'>*/echo "</div></form>";
-
-echo "<h2 class='text-center mt-5 mb-4'>Liste des bases de données</h2>
-<div class='col-10 text-center mx-auto'><input  class='btn btn-sm btn-outline-warning' onclick='checkVerif(\"backup\")' type='button' value='Faire un backup'>&nbsp;<input  class='btn btn-sm btn-outline-danger' type='button' onclick='checkVerif(\"compare\")' value='Comparer'></div>
-<div class='row col-6 mx-auto'>
-<h2 id='dbTxt' class='text-center text-danger '></h2>
-<form method=\"get\" action=\"traitement_db.php\">
-    <input class=\"form-control col-6\" type=\"hidden\" name=\"dbname\" id=\"dbname\">
-    <div style='display:none' id='btn-connect' class=\"text-center mb-5 col-12\">
-        <input   class=\"btn btn-outline-danger\" type='submit'name=\"submit\" value=\"Se connecter\">
-
-    </div>
-
-</form>
-";
-echo"<div class='overflow-auto' style='height: 350px'><table class='table table-striped'><thead><th>Base de donnée</th><th>Actions</th></thead><tbody>";
-foreach( $result as $p){
-
-    echo("<tr><td><input name='db[]' type='checkbox' class='backup' value='".$p ["schema_name"]."'>&nbsp;".$p ["schema_name"])."</td><td><form style='display: inline-block' method='get' action='traitement_db.php'>  <input   class='btn btn-sm btn-outline-warning' type='submit' name='submit' value='Tables'>  <input   class='btn btn-outline-danger' type='hidden' name='dbname' value='".$p ["schema_name"]."'></form><a href='list_backup.php?db=".$p ["schema_name"]."' style='margin-left:5px !important' type='button' class='btn btn-sm btn-outline-danger mr-3' >Voir les backup</a>&nbsp;</td></tr>";
-}
-
-echo '</tbody></table></div></div>';
-?>
-
-<?php
-
-exit();
-//$result = mysqli_query($link, $query) or die(mysqli_error($link));
-$dbs = array();
-while($db = mysqli_fetch_row($result))
-    $dbs[] = $db[0];
-echo implode('<br/>', $dbs);
-?>
-
-<?php
-
-?>
