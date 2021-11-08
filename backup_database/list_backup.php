@@ -29,12 +29,15 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
         window.history.back();
     }
 </script>
+<div class="row"><div class="col-4">
 <?php
 require_once 'fonctions.php';
 $dbHost     =  $_SESSION['server'];
 $dbUsername = $_SESSION['username'];
 $dbPassword = $_SESSION['password'];
 $dbName     = $_GET['db'];
+require_once "menu.php" ;
+echo '</div>';
 if (!empty($_GET['action'])){
     if ($_GET['action'] == 'delete'){
         if (file_exists("sauvegarde/bases/".$_GET['link']."/".$_GET['file'])){
@@ -73,8 +76,8 @@ if (!empty($_GET['table']) && !empty($_GET['db']) && isset($_GET['type'])){
         $doss=$_GET['type']=='db'?"bases":"tables";
     }
 
-    echo "<h3 class='text-center'>Liste des sauvegarges de la $type <strong>".$_GET['table']." </strong></h3>
-<div class='col-8 mx-auto'> <table class='table table-striped'><thead><th>Date</th><th>Actions</th></thead><tbody>";
+    echo "<div class='col-8 mx-auto'><h3 class='text-center'>Liste des sauvegarges de la $type <strong>".$_GET['table']." </strong></h3>
+ <table class='table table-striped'><thead><th>Date</th><th>Actions</th></thead><tbody>";
     $cpt=0;
     if (file_exists("sauvegarde/bases/".$_GET['db']."/$doss/".$_GET['table'])){
 
@@ -95,16 +98,18 @@ if (!empty($_GET['table']) && !empty($_GET['db']) && isset($_GET['type'])){
             closedir($handle);
         }
     }
-    echo "</tbody></table></div>";
+    echo "</tbody></table>";
 
     if ($cpt == 0){
         echo "<h3 class='text-center text-danger'>Aucune sauvegarde pour l'instant!</h3>";
 
     }
- }
+    echo "</div>";
+
+}
 if (empty($_GET['table']) && !empty($_GET['db'])){
-    echo "<h3 class='text-center'>Liste des sauvegarges de la base <strong>".$_GET['db']." </strong></h3>
-<div class='col-8 mx-auto'> <table class='table table-striped'><thead><th>Date</th><th>Actions</th></thead><tbody>";
+    echo "<div class='col-8 mx-auto'><h3 class='text-center'>Liste des sauvegarges de la base <strong>".$_GET['db']." </strong></h3>
+ <table class='table table-striped'><thead><th>Date</th><th>Actions</th></thead><tbody>";
     $cpt=0;
 
     if (file_exists("sauvegarde/bases/".$_GET['db']."/bases/")){
@@ -128,16 +133,19 @@ $_GET['table']="";
             closedir($handle);
         }
         }
-        echo "</tbody></table></div>";
+        echo "</tbody></table>";
 
     }
     if ($cpt == 0){
         echo "<h3 class='text-center text-danger'>Aucune sauvegarde pour l'instant!</h3>";
 
     }
- }
+    echo "</div>";
+
+}
 
 
 ?>
+</div>
 </body>
 </html>

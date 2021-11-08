@@ -28,6 +28,8 @@ require_once "fonctions.php";
     }
 </script>
 <?php
+require_once 'menu.php';
+
 if (isset($_POST['execute'])){
     if (!file_exists("sauvegarde/execute")) {
         mkdir("sauvegarde/execute",0777, true);
@@ -40,9 +42,9 @@ if (isset($_POST['execute'])){
       //  restoreDatabaseTables($dbHost, $dbUsername, $dbPassword, $dbName, $filePath)
         $result=restoreDatabaseTables($servername, $username, $password, $_POST['db'], "sauvegarde/execute/$fileName");
 if($result===true){
-    echo "<div class='alert  col-6 mx-auto alert-success'><h3 class='text-center'>Requete éxécutée avec succes!</h3></div>";
+    $_SESSION['successExc']= " <h3 class='text-center text-success'>Requete éxécutée avec succes!</h3>< ";
 }else{
-    echo "<div class='alert  col-6 mx-auto alert-danger'><h3 class='text-center'> Erreur lors de l'execution de la requete </h3><p>$result</p></div>";
+    $_SESSION['successExc']=   "<div> <h3 class='text-center text-danger'> Erreur lors de l'execution de la requete </h3><p>$result</p></div>";
 
 }
     }
@@ -78,7 +80,10 @@ if (isset($_POST['backup'])){
 
 <?php
 echo "<h3 class='text-center mb-5 mt-5'>Comparaison entre la base <strong>".$_GET['db1']." et ".$_GET['db2']." </strong> </h3>";
-
+if (isset( $_SESSION['successExc'])){
+    echo $_SESSION['successExc'];
+    unset($_SESSION['successExc']);
+}
 
 $conn= new PDO("mysql:host=$servername;dbname=".$_GET['db1'], $username, $password);
 
@@ -90,9 +95,11 @@ $queryDb2 = $connDb2->prepare('show tables');
 $queryDb2->execute();
   $basesDb2=[];
 $basesDb1=[];
+$tabTables=[];
 while($rows = $query->fetch(PDO::FETCH_ASSOC)){
     $rows=array_values($rows);
     if( isset($rows[0])){
+        $tabTables[]=$rows[0];
         $basesDb1[]=$rows[0];
        // echo "<tr><td>". $rows[0]."</td><td><a href='backup.php?table=$rows[0]&db=".$_GET['db1']."'>Faire un backup</a><a href='list_backup.php?table=$rows[0]&db=".$_GET['db1']."'>Voir les backup</a></td></tr>";
     }
@@ -101,6 +108,7 @@ while($rows = $query->fetch(PDO::FETCH_ASSOC)){
 while($rows = $queryDb2->fetch(PDO::FETCH_ASSOC)){
     $rows=array_values($rows);
     if( isset($rows[0])){
+        $tabTables[]=$rows[0];
         $basesDb2[]=$rows[0];
        // echo "<tr><td>". $rows[0]."</td><td><a href='backup.php?table=$rows[0]&db=".$_GET['db1']."'>Faire un backup</a><a href='list_backup.php?table=$rows[0]&db=".$_GET['db1']."'>Voir les backup</a></td></tr>";
     }
@@ -113,10 +121,23 @@ $diff=array_diff($basesDb1,$basesDb2);
 if (count($diff)>0){
     echo "<ul>";
     foreach ($diff as $differences){
-        echo  "<li>".$differences."</li>";
+        //echo  "<li>".$differences."</li>";
        $res=backup_tables($servername, $username, $password, $_GET['db1'],$differences);
         $diffDb1.= $res['sql'];
 
+    }
+    foreach ($tabTables as $tTbl){
+        $bool=false;
+        foreach ($basesDb2 as $bDb2){
+            if ($tTbl == $bDb2){
+                $bool=true;
+            }
+        }
+        if ($bool==false){
+            echo  "<li style='color: red'>".$tTbl."</li>";
+        }else{
+            echo  "<li >".$tTbl."</li>";
+        }
     }
     echo "</ul>";
 }
@@ -131,10 +152,24 @@ $diffDb2="";
 if (count($diff2)>0){
     echo "<ul>";
     foreach ($diff2 as $differences){
-        echo  "<li>".$differences."</li>";
+       // echo  "<li>".$differences."</li>";
         $res=backup_tables($servername, $username, $password, $_GET['db2'],$differences);
         $diffDb2.= $res['sql'];
 
+    }
+
+    foreach ($tabTables as $tTbl){
+        $bool=false;
+        foreach ($basesDb1   as $bDb1){
+            if ($tTbl == $bDb1){
+                $bool=true;
+            }
+        }
+        if ($bool==false){
+            echo  "<li style='color: red'>".$tTbl."</li>";
+        }else{
+            echo  "<li >".$tTbl."</li>";
+        }
     }
     echo "</ul>";
 }

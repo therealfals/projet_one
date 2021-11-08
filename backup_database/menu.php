@@ -9,6 +9,7 @@ if (session_status()==PHP_SESSION_NONE){
 <html>
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css">
+    <link rel="stylesheet" href="assets/style.css">
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 </head>
@@ -27,6 +28,7 @@ if (session_status()==PHP_SESSION_NONE){
         echo $_SESSION['msgSuccess'];
         unset($_SESSION['msgSuccess']);
     }
+
     ?>
     <ul class="show-dropdown">
         <li>
@@ -82,147 +84,7 @@ if (session_status()==PHP_SESSION_NONE){
     </ul>
 
 </div>
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-    }
-    /* Scrollbar-effect------- */
-    #accordian::-webkit-scrollbar {
-        width: 5px;
-        height: 8px;
-    }
-    #accordian::-webkit-scrollbar-track {
-        border-radius: 10px;
-        background-color: #e4e4e4;
-    }
-    #accordian::-webkit-scrollbar-thumb {
-        background: #0089ff;
-        border-radius: 10px;
-        transition: 0.5s;
-    }
-    #accordian::-webkit-scrollbar-thumb:hover {
-        background: #d5b14c;
-        transition: 0.5s;
-    }
 
-
-
-    /* --------- */
-    body {
-        background: #C8CACE;
-        font-family: Nunito, arial, verdana;
-    }
-
-    #accordian {
-        background: #fff;
-        width: 450px;
-        padding: 10px;
-        float: left;
-        height: 100vh;
-        overflow-x: hidden;
-    }
-
-
-    #accordian a {
-
-
-
-    }
-
-
-    i {
-        margin-right: 10px;
-    }
-
-    #accordian li {
-        list-style-type: none;
-    }
-
-    #accordian ul li span{
-        color: black;
-        text-decoration: none;
-        font-size: 15px;
-        display: block;
-        /* 	line-height: 34px; */
-        padding: 12px 15px;
-        transition: all 0.15s;
-        position: relative;
-        border-radius: 3px;
-    }
-
-    #accordian>ul.show-dropdown>li.active>span,
-    #accordian>ul>li>ul.show-dropdown>li.active>span,
-    #accordian>ul>li>ul>li>ul.show-dropdown>li.active>span,
-    #accordian>ul>li>ul>li>ul>li>ul.show-dropdown>li.active>span,
-    #accordian>ul>li>ul>li>ul>li>ul>li>ul.show-dropdown>li.active>span{
-        background-color: #E9EBEC;
-        color: #0089ff;
-        box-shadow: 0px 1px 2px rgba(0, 137, 255, 0.2);
-    }
-
-    #accordian>ul>li>ul,
-    #accordian>ul>li>ul>li>ul,
-    #accordian>ul>li>ul>li>ul>li>ul,
-    #accordian>ul>li>ul>li>ul>li>ul>li>ul {
-        display: none;
-    }
-
-
-    #accordian>ul>li.active>ul.show-dropdown,
-    #accordian>ul>li>ul>li.active>ul.show-dropdown,
-    #accordian>ul>li>ul>li>ul>li.active>ul.show-dropdown,
-    #accordian>ul>li>ul>li>ul>li>ul>li.active>ul.show-dropdown {
-        display: block;
-    }
-
-    #accordian>ul>li>ul,
-    #accordian>ul>li>ul>li>ul,
-    #accordian>ul>li>ul>li>ul>li>ul,
-    #accordian>ul>li>ul>li>ul>li>ul>li>ul {
-        padding-left: 20px;
-    }
-
-    #accordian span:not(:only-child):after {
-        content: "\f105";
-        position: absolute;
-        right: 20px;
-        top: 14px;
-        font-size: 15px;
-        font-family: "Font Awesome 5 Free";
-        display: inline-block;
-        padding-right: 3px;
-        vertical-align: middle;
-        font-weight: 900;
-        transition: 0.5s;
-    }
-    span{
-        cursor: pointer;
-    }
-    #accordian .active>span:not(:only-child):after {
-        transform: rotate(90deg);
-    }
-    .forms{
-
-
-        height: 30px;
-        border: black 1px solid;
-        padding: 6px;
-        border-radius: 5px;
-
-    }
-    .btns{
-
-        background-color: #0089ff;
-        height: 30px;
-        border: #0089ff 1px solid;
-        color: white;
-        padding: 6px;
-        cursor: pointer;
-        border-radius: 5px;
-
-    }
-</style>
 <script>
     // -------multilevel-accordian-menu---------
     $(document).ready(function() {
@@ -287,13 +149,9 @@ if (session_status()==PHP_SESSION_NONE){
 
 <?php
 //
-if (!empty( $_SESSION['error'])){
-    echo  $_SESSION['error'];
-    unset( $_SESSION['error']);
-}
 if (!empty($_POST['setData'])){
 
- unset($_SESSION['server']);
+    unset($_SESSION['server']);
     unset  ($_SESSION['username']);
     unset( $_SESSION['password']);
     try {
@@ -304,17 +162,19 @@ if (!empty($_POST['setData'])){
         $_SESSION['server'] = $_POST['serverTxt'];
         $_SESSION['username'] = $_POST['userTxt'];
         $_SESSION['password'] = $_POST['pwdTxt'];
+        echo "<script>window.location.href='index.php';</script>";
     } catch(PDOException $e) {
+        $_SESSION['error']= "<div style='height: 200px;margin: auto;padding: 10px;text-align: center' class='col-6 mx-auto alert alert-danger'><h3 style='color: orangered' class='text-center'>Erreur lors de la connexion!  Veuillez vérifier vos identifiants!</h3> </div>";// . $e->getMessage();
 
-        echo "<div style='height: 200px;width: 100%;margin: auto;padding: 10px;text-align: center' class='col-6 mx-auto alert alert-danger'><h3 style='color: orangered' class='text-center'>Erreur lors de la connexion!  Veuillez vérifier vos identifiants!</h3> </div>";// . $e->getMessage();
-       // exit();
+        echo "<script>window.location.href='index.php';</script>";
+        // exit();
     }
 
-  //  echo "<script>window.location.href='index.php'</script>";
+    //  echo "<script>window.location.href='index.php'</script>";
 }
-if (!empty($_SESSION['server'])){
+/*if (!empty($_SESSION['server'])){
     require_once( 'databases.php');
-}
+}*/
 ?>
 </body>
 </html>

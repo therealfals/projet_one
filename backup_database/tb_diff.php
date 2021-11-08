@@ -17,7 +17,7 @@ require_once 'fonctions.php';
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 </head>
 <body>
-<button class="m-2 mt-2 btn btn-sm btn-warning rounded rounded-pill" onclick="goBack()">Précédent</button>
+<button class="m-2 mt-2 btn  btn-warning rounded rounded-pill" onclick="goBack()">Précédent</button>
 <a href="logout.php" class="m-2 mt-2 btn btn-danger rounded rounded-pill float-right" >Se deconnecter</a>
 
 <script>
@@ -27,6 +27,8 @@ require_once 'fonctions.php';
 </script>
 
 <?php
+require_once 'menu.php';
+
 if (isset($_POST['execute'])){
     $link = mysqli_connect($servername,$username,$password, $_GET['db']);
     $result = mysqli_query($link, $_POST['diffTb']);
@@ -78,9 +80,11 @@ $queryDb2 = $connDb2->prepare($sql2);
 $queryDb2->execute();
 $basesDb2=[];
 $basesDb1=[];
+$tabTables=[];
  while($rows = $query->fetch(PDO::FETCH_ASSOC)){
     $rows=array_values($rows);
     if( isset($rows[0])){
+        $tabTables[]=$rows[0];
         $basesDb1[]=$rows[0];
         // echo "<tr><td>". $rows[0]."</td><td><a href='backup.php?table=$rows[0]&db=".$_GET['db1']."'>Faire un backup</a><a href='list_backup.php?table=$rows[0]&db=".$_GET['db1']."'>Voir les backup</a></td></tr>";
     }
@@ -90,7 +94,7 @@ while($rows = $queryDb2->fetch(PDO::FETCH_ASSOC)){
     $rows=array_values($rows);
 
     if( isset($rows[0])){
-
+        $tabTables[]=$rows[0];
         $basesDb2[]=$rows[0];
         // echo "<tr><td>". $rows[0]."</td><td><a href='backup.php?table=$rows[0]&db=".$_GET['db1']."'>Faire un backup</a><a href='list_backup.php?table=$rows[0]&db=".$_GET['db1']."'>Voir les backup</a></td></tr>";
     }
@@ -129,7 +133,20 @@ where TABLE_NAME='".$_GET['tb1']."' AND COLUMN_NAME ='$differences' AND TABLE_SC
 
        // echo"</pre>";
        // exit();
-        echo  "<li>".$differences."</li>";
+       // echo  "<li>".$differences."</li>";
+    }
+    foreach ($tabTables as $tTbl){
+        $bool=false;
+    foreach ($basesDb2 as $bDb2){
+        if ($tTbl == $bDb2){
+            $bool=true;
+        }
+    }
+    if ($bool==false){
+        echo  "<li style='color: red'>".$tTbl."</li>";
+    }else{
+        echo  "<li >".$tTbl."</li>";
+    }
     }
     echo "</ul>";
 
@@ -169,7 +186,20 @@ where TABLE_NAME='".$_GET['tb2']."' AND COLUMN_NAME ='$differences' AND TABLE_SC
             $i++;
         }
 
-        echo  "<li>".$differences."</li>";
+
+    }
+    foreach ($tabTables as $tTbl){
+        $bool=false;
+        foreach ($basesDb1 as $bDb1){
+            if ($tTbl == $bDb1){
+                $bool=true;
+            }
+        }
+        if ($bool==false){
+            echo  "<li style='color: red'>".$tTbl."</li>";
+        }else{
+            echo  "<li >".$tTbl."</li>";
+        }
     }
     echo "</ul>";
 }

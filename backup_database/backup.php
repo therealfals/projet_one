@@ -25,13 +25,16 @@ if (!empty($_GET['table']) && !empty($_GET['db'])){
             //  echo $result["msg"];
         }
     }
-    echo "Les tables ont été backupées avec succés! (".count($ok)."/$size)<button style='cursor: pointer;color:white;border-radius: 5px;height: 30px; border:solid 1px red;background-color: red;' onclick='goBack()'>Precedent</button>";
+    $_SESSION['msgSuccess']= "<div class='alert alert-success col-6 mx-auto'><h6 class='text-center'>Les tables ont été backupées avec succés! (".count($ok)."/$size)</h6></div>";
+    echo "<script> window.history.back()</script>";
 
  }
 if (empty($_GET['table']) && !empty($_GET['db'])){
     if (count($_GET)==2){
         $result=backup_tables($dbhost, $dbuser, $dbpass, $_GET['db'],"*");
-        echo "La base a été backupée avec succés!<button style='cursor: pointer;color:white;border-radius: 5px;height: 30px; border:solid 1px red;background-color: red;' onclick='goBack()'>Precedent</button>";
+        $_SESSION['msgSuccess']= "<div class='alert alert-success col-6 mx-auto'><h6 class='text-center'>La base a été backupée avec succés!</h6></div>";
+        echo "<script> window.history.back()</script>";
+
         exit();
 
     }
@@ -45,7 +48,9 @@ if (empty($_GET['table']) && !empty($_GET['db'])){
             $ok[]=$tab["$i"];
          }
     }
-        echo "Les bases ont été backupées avec succés! (".count($ok)."/$size).<button  style='cursor: pointer;color:white;border-radius: 5px;height: 30px; border:solid 1px red;background-color: red;' > <a style='text-decoration: none;color: white' href='index.php'>Precedent</a></button>";
+    $_SESSION['msgSuccess']= "<div class='alert alert-success col-6 mx-auto'><h6 class='text-center'>Les bases ont été backupées avec succés! (".count($ok)."/$size).</h6></div>";
+    echo "<script> window.location.href='index.php'</script>";
+
     //var_dump($_GET);
     exit();
    }

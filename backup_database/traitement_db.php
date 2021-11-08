@@ -13,7 +13,7 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
 <body>
 <a  href='index.php' class="m-2 mt-2 btn btn-warning rounded rounded-pill" >Précédent</a>
 <a href="logout.php" class="m-2 mt-2 btn btn-danger rounded rounded-pill float-right" >Se deconnecter</a>
-
+<?php require_once "menu.php"?>
 <script>
     function goBack() {
         window.history.back();
@@ -69,7 +69,7 @@ if (!isset($_SESSION["username"]) && !isset($_SESSION["password"])){
     }
 </script>
 <?php
-if (!empty($_GET)){
+if (!empty($_GET) && !empty($_SESSION['server'])){
     $servername =  $_SESSION['server'];
     $username = $_SESSION['username'];
     $password = $_SESSION['password'];
@@ -107,7 +107,7 @@ if (!empty($_GET)){
     }
     echo "</select>";
     echo "<input class='btn btn-outline-danger mt-3' type='submit' name='compare' value='Comparer'>*/echo "</div></form>";
-    echo "<div class=' col-8 mx-auto'><h3 class='mb-2 mt-2 text-center'>Tables</h3>
+    echo "<div class=' col-12 mx-auto'><h3 class='mb-2 mt-2 text-center'>Tables</h3>
  <div class='col-12 text-center'><input   class='btn btn-sm btn-outline-warning' onclick='checkVerif(\"backup\")' type='button' value='Faire un backup'>&nbsp;<input  class='btn btn-sm btn-outline-danger' type='button' onclick='checkVerif(\"compare\")' value='Comparer'></div>
  <div class='overflow-auto mt-2' style='height: 350px'><table class='table table-striped'><thead> <th>Nom table</th><th>Actions</th> </thead><tbody>";
 
